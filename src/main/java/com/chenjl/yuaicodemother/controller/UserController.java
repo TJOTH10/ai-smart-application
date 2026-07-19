@@ -13,27 +13,27 @@ import com.chenjl.yuaicodemother.model.dto.*;
 import com.chenjl.yuaicodemother.model.vo.LoginUserVO;
 import com.chenjl.yuaicodemother.model.vo.UserVO;
 import com.mybatisflex.core.paginate.Page;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.chenjl.yuaicodemother.model.entity.User;
 import com.chenjl.yuaicodemother.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 用户 控制层。
+ * 用户管理接口
  *
  * @author Administrator
  * @since 2026-07-18
  */
+@Tag(name = "用户管理", description = "用户注册、登录、信息查询与管理")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -43,14 +43,11 @@ public class UserController {
 
     /**
      * 用户注册
-     *
-     * @param userRegisterRequest 用户注册请求
-     * @return 注册结果
      */
+    @Operation(summary = "用户注册", description = "创建新用户账号，账号和密码长度需满足要求")
     @PostMapping("register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
-        // 获取该对象所有的值
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
@@ -58,7 +55,10 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
-    // 用户登陆
+    /**
+     * 用户登录
+     */
+    @Operation(summary = "用户登录", description = "使用账号密码登录，登录成功后将用户信息存入 session")
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
@@ -68,7 +68,10 @@ public class UserController {
         return ResultUtils.success(loginUserVO);
     }
 
-    // 获取当前用户
+    /**
+     * 获取当前登录用户信息
+     */
+    @Operation(summary = "获取当前登录用户", description = "从 session 中获取当前登录用户信息，未登录则报错")
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
@@ -76,8 +79,9 @@ public class UserController {
     }
 
     /**
-     * 创建用户
+     * 创建用户（管理员）
      */
+    @Operation(summary = "创建用户", description = "管理员创建新用户，默认密码为 12345678")
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
@@ -94,11 +98,13 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取用户（仅管理员）
+     * 根据 id 获取用户（管理员）
      */
+    @Operation(summary = "根据 ID 获取用户", description = "管理员根据用户 ID 查询完整用户信息（含敏感字段）")
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(long id) {
+    public BaseResponse<User> getUserById(
+            @Parameter(description = "用户 ID", required = true, example = "123456789") long id) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         User user = userService.getById(id);
         ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
@@ -106,18 +112,21 @@ public class UserController {
     }
 
     /**
-     * 根据 id 获取包装类
+     * 根据 id 获取脱敏用户信息
      */
+    @Operation(summary = "根据 ID 获取脱敏用户", description = "根据用户 ID 查询，返回脱敏后的用户信息（不含密码等敏感字段）")
     @GetMapping("/get/vo")
-    public BaseResponse<UserVO> getUserVOById(long id) {
+    public BaseResponse<UserVO> getUserVOById(
+            @Parameter(description = "用户 ID", required = true, example = "123456789") long id) {
         BaseResponse<User> response = getUserById(id);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
     }
 
     /**
-     * 删除用户
+     * 删除用户（管理员）
      */
+    @Operation(summary = "删除用户", description = "管理员根据 ID 逻辑删除用户")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
@@ -129,8 +138,9 @@ public class UserController {
     }
 
     /**
-     * 更新用户
+     * 更新用户（管理员）
      */
+    @Operation(summary = "更新用户", description = "管理员更新用户信息（昵称、头像、简介、角色等）")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
@@ -145,10 +155,9 @@ public class UserController {
     }
 
     /**
-     * 分页获取用户封装列表（仅管理员）
-     *
-     * @param userQueryRequest 查询请求参数
+     * 分页查询用户列表（管理员）
      */
+    @Operation(summary = "分页查询用户列表", description = "管理员分页查询用户，支持按昵称、账号、角色等条件筛选，返回脱敏数据")
     @PostMapping("/list/page/vo")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
@@ -163,6 +172,5 @@ public class UserController {
         userVOPage.setRecords(userVOList);
         return ResultUtils.success(userVOPage);
     }
-
 
 }

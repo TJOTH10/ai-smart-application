@@ -6,7 +6,7 @@ function handleClick() {
 
 <template>
   <div class="global-footer" @click="handleClick">
-    AI智能应用，程序员chenjl&Github
+    AI智能应用，程序员chenjl=>Github
   </div>
 </template>
 
