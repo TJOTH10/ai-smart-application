@@ -55,7 +55,7 @@ src/
 ├── access.ts                # 路由守卫（beforeEach）：首次获取用户、/admin 校验角色
 ├── stores/
 │   └── loginUser.ts         # 登录用户 Pinia store
-├── components/              # 可复用组件（GlobalHeader、GlobalFooter、AppCard、MarkdownRenderer 等）
+├── components/   x           # 可复用组件（GlobalHeader、GlobalFooter、AppCard、MarkdownRenderer 等）
 ├── layouts/
 │   └── BasicLayout.vue      # 基础布局（header + router-view + footer）
 ├── pages/
@@ -78,6 +78,7 @@ src/
 - `src/api/` 目录下的文件由 `openapi2ts` 自动生成，不要手动修改
 - Prettier：无分号、单引号、100 字符宽度
 - ESLint：`@vue/eslint-config-typescript` + `plugin:vue/essential`
+- 遵循Vue3的组合式API(Composition API)，而不是选项式API
 
 ### Ant Design Vue 4.x 用法
 
