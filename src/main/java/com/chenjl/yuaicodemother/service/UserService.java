@@ -1,6 +1,6 @@
 package com.chenjl.yuaicodemother.service;
 
-import com.chenjl.yuaicodemother.model.dto.UserQueryRequest;
+import com.chenjl.yuaicodemother.model.dto.user.UserQueryRequest;
 import com.chenjl.yuaicodemother.model.vo.LoginUserVO;
 import com.chenjl.yuaicodemother.model.vo.UserVO;
 import com.mybatisflex.core.query.QueryWrapper;

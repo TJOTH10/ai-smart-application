@@ -1,4 +1,4 @@
-package com.chenjl.yuaicodemother.model.dto;
+package com.chenjl.yuaicodemother.model.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

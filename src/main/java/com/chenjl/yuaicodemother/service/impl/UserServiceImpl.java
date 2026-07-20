@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.chenjl.yuaicodemother.exception.BusinessException;
 import com.chenjl.yuaicodemother.exception.ErrorCode;
-import com.chenjl.yuaicodemother.model.dto.UserQueryRequest;
+import com.chenjl.yuaicodemother.model.dto.user.UserQueryRequest;
 import com.chenjl.yuaicodemother.model.enums.UserRoleEnum;
 import com.chenjl.yuaicodemother.model.vo.LoginUserVO;
 import com.chenjl.yuaicodemother.model.vo.UserVO;

@@ -1,4 +1,4 @@
-package com.chenjl.yuaicodemother.model.dto;
+package com.chenjl.yuaicodemother.model.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -6,11 +6,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 用户登录请求
+ * 用户注册请求
  */
-@Schema(description = "用户登录请求")
+@Schema(description = "用户注册请求")
 @Data
-public class UserLoginRequest implements Serializable {
+public class UserRegisterRequest implements Serializable {
 
     private static final long serialVersionUID = 3191241716373120793L;
 
@@ -25,4 +25,10 @@ public class UserLoginRequest implements Serializable {
      */
     @Schema(description = "用户密码", requiredMode = Schema.RequiredMode.REQUIRED, example = "12345678")
     private String userPassword;
+
+    /**
+     * 确认密码
+     */
+    @Schema(description = "确认密码，需与密码一致", requiredMode = Schema.RequiredMode.REQUIRED, example = "12345678")
+    private String checkPassword;
 }
