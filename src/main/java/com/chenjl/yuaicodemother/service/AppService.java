@@ -1,10 +1,12 @@
 package com.chenjl.yuaicodemother.service;
 
 import com.chenjl.yuaicodemother.model.dto.app.AppQueryRequest;
+import com.chenjl.yuaicodemother.model.entity.User;
 import com.chenjl.yuaicodemother.model.vo.AppVO;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import com.chenjl.yuaicodemother.model.entity.App;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -36,5 +38,24 @@ public interface AppService extends IService<App> {
      * @return
      */
     public QueryWrapper getQueryWrapper(AppQueryRequest appQueryRequest);
+
+    /**
+     *  通过对话生成应用代码
+     *
+     * @param appId 应用id
+     * @param message 对话内容
+     * @param loginUser 登陆用户
+     * @return
+     */
+    public Flux<String> chatToGenCode(Long appId, String message, User loginUser);
+
+    /**
+     * 应=应用部署
+     *
+     * @param appId 应用id
+     * @param loginUser 登陆用户
+     * @return
+     */
+    public String deployApp(Long appId, User loginUser);
 
 }
