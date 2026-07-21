@@ -1,4 +1,64 @@
 declare namespace API {
+  type AppAddRequest = {
+    initPrompt?: string
+  }
+
+  type AppAdminUpdateRequest = {
+    id?: number
+    appName?: string
+    cover?: string
+    priority?: number
+  }
+
+  type AppDeployRequest = {
+    appId?: number
+  }
+
+  type AppQueryRequest = {
+    /** 当前页码，从 1 开始 */
+    pageNum?: number
+    /** 每页大小 */
+    pageSize?: number
+    /** 排序字段名 */
+    sortField?: string
+    /** 排序方向 */
+    sortOrder?: 'ascend' | 'descend'
+    id?: number
+    appName?: string
+    cover?: string
+    initPrompt?: string
+    codeGenType?: string
+    deployKey?: string
+    priority?: number
+    userId?: number
+  }
+
+  type AppUpdateRequest = {
+    id?: number
+    appName?: string
+  }
+
+  type AppVO = {
+    id?: number
+    appName?: string
+    cover?: string
+    initPrompt?: string
+    codeGenType?: string
+    deployKey?: string
+    deployedTime?: string
+    priority?: number
+    userId?: number
+    createTime?: string
+    updateTime?: string
+    user?: UserVO
+  }
+
+  type BaseResponseAppVO = {
+    code?: number
+    data?: AppVO
+    message?: string
+  }
+
   type BaseResponseBoolean = {
     code?: number
     data?: boolean
@@ -14,6 +74,12 @@ declare namespace API {
   type BaseResponseLong = {
     code?: number
     data?: number
+    message?: string
+  }
+
+  type BaseResponsePageAppVO = {
+    code?: number
+    data?: PageAppVO
     message?: string
   }
 
@@ -41,27 +107,60 @@ declare namespace API {
     message?: string
   }
 
+  type chatToGenCodeParams = {
+    appId: number
+    message: string
+  }
+
   type DeleteRequest = {
-    id?: number
+    /** 要删除的记录 ID */
+    id: number
+  }
+
+  type getAppVOByIdByAdminParams = {
+    id: number
+  }
+
+  type getAppVOByIdParams = {
+    id: number
   }
 
   type getUserByIdParams = {
+    /** 用户 ID */
     id: number
   }
 
   type getUserVOByIdParams = {
+    /** 用户 ID */
     id: number
   }
 
   type LoginUserVO = {
+    /** 用户 ID */
     id?: number
+    /** 用户账号 */
     userAccount?: string
+    /** 用户昵称 */
     userName?: string
+    /** 用户头像 URL */
     userAvatar?: string
+    /** 用户简介 */
     userProfile?: string
-    userRole?: string
+    /** 用户角色 */
+    userRole?: 'user' | 'admin'
+    /** 创建时间 */
     createTime?: string
+    /** 更新时间 */
     updateTime?: string
+  }
+
+  type PageAppVO = {
+    records?: AppVO[]
+    pageNumber?: number
+    pageSize?: number
+    totalPage?: number
+    totalRow?: number
+    optimizeCountQuery?: boolean
   }
 
   type PageUserVO = {
@@ -71,6 +170,12 @@ declare namespace API {
     totalPage?: number
     totalRow?: number
     optimizeCountQuery?: boolean
+  }
+
+  type ServerSentEventString = true
+
+  type serveStaticResourceParams = {
+    deployKey: string
   }
 
   type User = {
@@ -88,51 +193,82 @@ declare namespace API {
   }
 
   type UserAddRequest = {
+    /** 用户昵称 */
     userName?: string
-    userAccount?: string
+    /** 用户账号 */
+    userAccount: string
+    /** 用户头像 URL */
     userAvatar?: string
+    /** 用户简介 */
     userProfile?: string
-    userRole?: string
+    /** 用户角色 */
+    userRole?: 'user' | 'admin'
   }
 
   type UserLoginRequest = {
-    userAccount?: string
-    userPassword?: string
+    /** 用户账号 */
+    userAccount: string
+    /** 用户密码 */
+    userPassword: string
   }
 
   type UserQueryRequest = {
+    /** 当前页码，从 1 开始 */
     pageNum?: number
+    /** 每页大小 */
     pageSize?: number
+    /** 排序字段名 */
     sortField?: string
-    sortOrder?: string
+    /** 排序方向 */
+    sortOrder?: 'ascend' | 'descend'
+    /** 用户 ID 精确匹配 */
     id?: number
+    /** 用户昵称模糊搜索 */
     userName?: string
+    /** 用户账号模糊搜索 */
     userAccount?: string
+    /** 用户简介模糊搜索 */
     userProfile?: string
-    userRole?: string
+    /** 用户角色筛选 */
+    userRole?: 'user' | 'admin' | 'ban'
   }
 
   type UserRegisterRequest = {
-    userAccount?: string
-    userPassword?: string
-    checkPassword?: string
+    /** 用户账号 */
+    userAccount: string
+    /** 用户密码 */
+    userPassword: string
+    /** 确认密码，需与密码一致 */
+    checkPassword: string
   }
 
   type UserUpdateRequest = {
-    id?: number
+    /** 用户 ID */
+    id: number
+    /** 用户昵称 */
     userName?: string
+    /** 用户头像 URL */
     userAvatar?: string
+    /** 用户简介 */
     userProfile?: string
-    userRole?: string
+    /** 用户角色 */
+    userRole?: 'user' | 'admin'
   }
 
   type UserVO = {
+    /** 用户 ID */
     id?: number
+    /** 用户账号 */
     userAccount?: string
+    /** 用户昵称 */
     userName?: string
+    /** 用户头像 URL */
     userAvatar?: string
+    /** 用户简介 */
     userProfile?: string
-    userRole?: string
+    /** 用户角色 */
+    userRole?: 'user' | 'admin'
+    /** 创建时间 */
     createTime?: string
   }
 }
