@@ -24,7 +24,7 @@ const queryParams = reactive<API.UserQueryRequest>({
 const searchForm = reactive({
   userAccount: '',
   userName: '',
-  userRole: undefined as string | undefined,
+  userRole: undefined as API.UserQueryRequest['userRole'],
 })
 
 // ---- Columns ----
@@ -102,7 +102,7 @@ const modalForm = reactive({
   userName: '',
   userAvatar: '',
   userProfile: '',
-  userRole: 'user' as string,
+  userRole: 'user' as NonNullable<API.UserAddRequest['userRole']>,
 })
 
 function openAddModal() {

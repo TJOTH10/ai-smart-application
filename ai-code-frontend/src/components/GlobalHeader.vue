@@ -10,22 +10,36 @@ interface MenuItem {
   path: string
 }
 
-const menuItems: MenuItem[] = [
-  { key: 'home', label: '首页', path: '/' },
-  { key: 'about', label: '关于', path: '/about' },
-]
-
 const router = useRouter()
 const route = useRoute()
 const store = useLoginUserStore()
 
+const menuItems = computed<MenuItem[]>(() => {
+  const items: MenuItem[] = [
+    { key: 'home', label: '首页', path: '/' },
+  ]
+  if (store.userRole === 'admin') {
+    items.push({ key: 'adminApp', label: '应用管理', path: '/admin/app' })
+    items.push({ key: 'adminUser', label: '用户管理', path: '/admin/user' })
+  }
+  return items
+})
+
 const selectedKeys = computed<string[]>(() => {
-  const matched = menuItems.find((item) => item.path === route.path)
-  return matched ? [matched.key] : []
+  const currentPath = route.path
+  // Exact match first
+  const exactMatch = menuItems.value.find((item) => item.path === currentPath)
+  if (exactMatch) return [exactMatch.key]
+  // Prefix match for sub-routes
+  const prefixMatch = menuItems.value.find(
+    (item) => item.path !== '/' && currentPath.startsWith(item.path),
+  )
+  if (prefixMatch) return [prefixMatch.key]
+  return []
 })
 
 function handleMenuClick(item: { key: string }) {
-  const target = menuItems.find((m) => m.key === item.key)
+  const target = menuItems.value.find((m) => m.key === item.key)
   if (target) {
     router.push(target.path)
   }
@@ -33,19 +47,20 @@ function handleMenuClick(item: { key: string }) {
 
 function handleLogout() {
   store.logout()
-  router.push('/user/login')
+  router.replace('/')
 }
 </script>
 
 <template>
   <div class="global-header">
-    <div class="header-left">
+    <router-link to="/" class="header-left" aria-label="返回首页">
       <img class="logo" src="@/assets/logo.svg" alt="logo" />
       <span class="site-title">AI智能生成</span>
-    </div>
+    </router-link>
 
     <div class="header-center">
       <a-menu
+        class="header-menu"
         v-model:selectedKeys="selectedKeys"
         mode="horizontal"
         @click="handleMenuClick"
@@ -112,6 +127,13 @@ function handleLogout() {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  text-decoration: none;
+}
+
+.header-left:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .logo {
@@ -130,8 +152,15 @@ function handleLogout() {
 .header-center {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  min-width: 0;
   margin: 0 24px;
+}
+
+.header-menu {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-start;
 }
 
 .header-right {

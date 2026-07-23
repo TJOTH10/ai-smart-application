@@ -30,9 +30,24 @@ const router = createRouter({
       component: () => import('../pages/user/ProfilePage.vue'),
     },
     {
+      path: '/app/chat/:appId',
+      name: 'appChat',
+      component: () => import('../pages/app/AppChatPage.vue'),
+    },
+    {
+      path: '/app/edit/:appId',
+      name: 'appEdit',
+      component: () => import('../pages/app/AppEditPage.vue'),
+    },
+    {
       path: '/admin/user',
       name: 'adminUser',
       component: () => import('../pages/admin/UserManagePage.vue'),
+    },
+    {
+      path: '/admin/app',
+      name: 'adminApp',
+      component: () => import('../pages/admin/AppManagePage.vue'),
     },
   ],
 })
